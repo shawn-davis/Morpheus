@@ -326,8 +326,8 @@ class OpenAIChatService(LLMService):
             The API key for the LLM service, by default None. If `None` the API key will be read from the
             `OPENAI_API_KEY` environment variable. If neither are present an error will be raised.
         base_url : str, optional
-            The api host url, by default None. If `None` the url will be read from the `OPENAI_API_BASE` environment
-            variable. If neither are present the OpenAI default will be used., by default None
+            The api host url, by default None. The url will be read from the `OPENAI_API_BASE` environment
+            variable first. If neither are present the OpenAI default will be used., by default None
         default_model_kwargs : dict, optional
             Default arguments to use when creating a client via the `get_client` function. Any argument specified here
             will automatically be used when calling `get_client`. Arguments specified in the `get_client` function will
@@ -345,7 +345,7 @@ class OpenAIChatService(LLMService):
         super().__init__()
 
         self._api_key = api_key
-        self._base_url = base_url
+        self._base_url = os.environ.get("OPENAI_API_BASE", base_url)
 
         self._default_model_kwargs = default_model_kwargs or {}
 

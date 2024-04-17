@@ -135,13 +135,9 @@ class NVFoundationLLMService(LLMService):
     api_key : str, optional
         The API key for the LLM service, by default None. If `None` the API key will be read from the `NGC_API_KEY`
         environment variable. If neither are present an error will be raised.
-    org_id : str, optional
-        The organization ID for the LLM service, by default None. If `None` the organization ID will be read from the
-        `NGC_ORG_ID` environment variable. This value is only required if the account associated with the `api_key` is
-        a member of multiple NGC organizations.
     base_url : str, optional
-            The api host url, by default None. If `None` the url will be read from the `NVIDIA_API_BASE` environment
-            variable. If neither are present `https://api.nvcf.nvidia.com/v2` will be used., by default None
+            The api host url, by default None. The url will be read from the `NVIDIA_API_BASE` environment
+            variable first. If neither are present `https://api.nvcf.nvidia.com/v2` will be used., by default None
     """
 
     def __init__(self, *, api_key: str = None, base_url: str = None) -> None:
@@ -154,7 +150,7 @@ class NVFoundationLLMService(LLMService):
         if base_url is None:
             self._base_url = os.getenv('NVIDIA_API_BASE', 'https://api.nvcf.nvidia.com/v2')
         else:
-            self._base_url = base_url
+            self._base_url = os.getenv('NVIDIA_API_BASE', base_url)
 
         self._nve_client = NVEModel(
             nvidia_api_key=self._api_key,

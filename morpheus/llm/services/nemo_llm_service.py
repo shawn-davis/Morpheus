@@ -197,15 +197,15 @@ class NeMoLLMService(LLMService):
         Parameters
         ----------
         api_key : str, optional
-            The API key for the LLM service, by default None. If `None` the API key will be read from the `NGC_API_KEY`
-            environment variable. If neither are present an error will be raised., by default None
+            The API key for the LLM service, by default None. The API key will be read from the `NGC_API_KEY`
+            environment variable first. If neither are present an error will be raised., by default None
         org_id : str, optional
-            The organization ID for the LLM service, by default None. If `None` the organization ID will be read from
-            the `NGC_ORG_ID` environment variable. This value is only required if the account associated with the
+            The organization ID for the LLM service, by default None. The organization ID will be read from
+            the `NGC_ORG_ID` environment variable first. This value is only required if the account associated with the
             `api_key` is a member of multiple NGC organizations., by default None
         base_url : str, optional
-            The api host url, by default None. If `None` the url will be read from the `NGC_API_BASE` environment
-            variable. If neither are present an error will be raised., by default None
+            The api host url, by default None. The url will be read from the `NGC_API_BASE` environment
+            variable first. If neither are present an error will be raised., by default None
         retry_count : int, optional
             The number of times to retry a request before raising an exception, by default 5
 
@@ -215,9 +215,9 @@ class NeMoLLMService(LLMService):
             raise ImportError(IMPORT_ERROR_MESSAGE) from IMPORT_EXCEPTION
 
         super().__init__()
-        api_key = api_key if api_key is not None else os.environ.get("NGC_API_KEY", None)
-        org_id = org_id if org_id is not None else os.environ.get("NGC_ORG_ID", None)
-        base_url = base_url if base_url is not None else os.environ.get("NGC_API_BASE", None)
+        api_key = os.environ.get("NGC_API_KEY", api_key)
+        org_id = os.environ.get("NGC_ORG_ID", org_id)
+        base_url = os.environ.get("NGC_API_BASE", base_url)
 
         self._retry_count = retry_count
 
